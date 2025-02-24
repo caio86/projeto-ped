@@ -7,7 +7,7 @@ from despesa import Despesa
 from gestor_despesas import GestorDespesas
 
 # abertura do arquiuvo
-ficheiro = open("pagamentos_gestao_pactuada_2019_2024.csv", "r")
+ficheiro = open("pagamentos_gestao_pactuada_2019_2024.csv", "r", encoding="latin-1")
 reader = csv.reader(ficheiro)
 
 # Configuração do logging
