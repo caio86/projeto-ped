@@ -33,22 +33,24 @@ class GestorCategoriasDespesas:
         if ano not in self._anos:
             self._anos.append(ano)
 
-    def pesquisar_ano(self, ano: int):
+    def pesquisar_ano(self, ano: int, verbose=False):
         total = 0
         for categoria in self.__categorias[ano]:
             total += categoria.valor
-            print(categoria)
+            if verbose:
+                print(categoria)
 
         print(f"Total {ano}: R${self.show_value_with_locale(total)}")
 
-    def mostrar_anos(self):
+    def mostrar_anos(self, verbose=False):
         total = 0
         for ano in self.__categorias:
             total_ano = 0
             for categoria in self.__categorias[ano]:
                 total += categoria.valor
                 total_ano += categoria.valor
-                print(categoria)
+                if verbose:
+                    print(categoria)
             print(f"Total {ano}: R${self.show_value_with_locale(total_ano)}")
         print(f"Total: R${self.show_value_with_locale(total)}")
 
