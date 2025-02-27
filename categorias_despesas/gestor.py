@@ -19,6 +19,10 @@ class GestorCategoriasDespesas:
     def categorias(self):
         return self._categorias
 
+    @staticmethod
+    def show_value_with_locale(value: float) -> str:
+        return locale.format_string("%5.2f", value, True)
+
     def add(self, despesa: CategoriasDespesas):
         ano = despesa.data_lancamento.year
         if ano in self.__categorias:
@@ -35,7 +39,7 @@ class GestorCategoriasDespesas:
             total += categoria.valor
             print(categoria)
 
-        print(f"Total {ano}: R${locale.format_string("%5.2f", total, True)}")
+        print(f"Total {ano}: R${self.show_value_with_locale(total)}")
 
     def mostrar_anos(self):
         total = 0
@@ -45,8 +49,8 @@ class GestorCategoriasDespesas:
                 total += categoria.valor
                 total_ano += categoria.valor
                 print(categoria)
-            print(f"Total: R${total_ano:5.2f}")
-        print(f"Total: R${total:5.2f}")
+            print(f"Total {ano}: R${self.show_value_with_locale(total_ano)}")
+        print(f"Total: R${self.show_value_with_locale(total)}")
 
     def pesquisar_categoria(self, categoria: str): ...
 
