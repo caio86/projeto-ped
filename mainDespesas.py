@@ -3,6 +3,8 @@ import logging
 from datetime import datetime
 
 from AVLTree import AVLTree
+from categorias_despesas.categorias import CategoriasDespesas
+from categorias_despesas.gestor import GestorCategoriasDespesas
 from despesa import Despesa
 from gestor_despesas import GestorDespesas
 
@@ -23,6 +25,7 @@ logging.basicConfig(
 
 arvore_despesas = AVLTree()
 gd = GestorDespesas()
+gc = GestorCategoriasDespesas()
 organizacao_social = {}
 
 processed = 0
@@ -45,10 +48,18 @@ for linha in reader:
             float(linha[13].replace('"', "")),
         )
 
+        categoria = CategoriasDespesas(
+            int(linha[4].replace('"', "")),
+            linha[9].replace('"', ""),
+            datetime.strptime(linha[5].replace('"', ""), "%Y-%m-%d"),
+            float(linha[13].replace('"', "")),
+        )
+
         # adiciona na arvore binaria
         arvore_despesas.add(despesa)
         # adicionada no objeto "GestorDespesas"
         gd.adicionar_despesa(despesa)
+        gc.add(categoria)
 
         # mostra na tela o progresso a cada 1000 registros lidos
         if processed % 1000 == 0:
@@ -66,18 +77,23 @@ for linha in reader:
         logging.error(linha)
         # print(linha)
         disregard += 1
-print(despesa.data_lancamento)
+# print(despesa.data_lancamento)
 print()
 print("Total de registros processado:", processed)
 print("Total de Válidos:", loaded)
 print("Descartados:", disregard)
 print("Len (arvore):", len(arvore_despesas))
 print("Len (gd):", len(gd))
+print("Len (gc):", len(gc))
 
 for codigo, os in organizacao_social.items():
     print(codigo, os)
 # for despesa in repositorio_despesas:
 #     print(despesa)
+
+print(gc.anos)
+ano = int(input(": "))
+gc.pesquisar_ano(ano)
 
 # key = Despesa(1681572,'','')
 # print('busca:', repositorio_despesas.search(key))

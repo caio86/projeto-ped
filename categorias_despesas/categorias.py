@@ -1,4 +1,7 @@
+import locale
 from datetime import datetime
+
+locale.setlocale(locale.LC_ALL, "pt_BR")
 
 
 class CategoriasDespesas:
@@ -31,7 +34,7 @@ class CategoriasDespesas:
         return self.__valor
 
     def __str__(self):
-        return f'{self.codigo_lancamento}: {self.data_lancamento.strftime("%d/%m/%Y")}. - R$ {self.valor:5.2f}'
+        return f'{self.codigo_lancamento}: {self.data_lancamento.strftime("%d/%m/%Y")} - {self.codigo_categoria} - R$ {locale.format_string("%5.2f", self.valor, True)}'
 
     def __lt__(self, other):  # <
         return self.codigo_lancamento < other.codigo_lancamento
