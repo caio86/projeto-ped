@@ -1,4 +1,5 @@
 import csv
+import locale
 import logging
 from datetime import datetime
 
@@ -7,6 +8,13 @@ from categorias_despesas.categorias import CategoriasDespesas
 from categorias_despesas.gestor import GestorCategoriasDespesas
 from despesa import Despesa
 from gestor_despesas import GestorDespesas
+
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+
+
+def show_value_with_locale(value: float) -> str:
+    return locale.format_string("%5.2f", value, True)
+
 
 # abertura do arquiuvo
 ficheiro = open("pagamentos_gestao_pactuada_2019_2024.csv", "r", encoding="latin-1")
@@ -48,18 +56,16 @@ for linha in reader:
             float(linha[13].replace('"', "")),
         )
 
-        categoria = CategoriasDespesas(
-            int(linha[4].replace('"', "")),
-            linha[9].replace('"', ""),
-            datetime.strptime(linha[5].replace('"', ""), "%Y-%m-%d"),
-            float(linha[13].replace('"', "")),
+        gc.add(
+            linha[9].replace('"', ""),  # cod_cat
+            linha[10].replace('"', ""),  # cat
+            datetime.strptime(linha[5].replace('"', ""), "%Y-%m-%d"),  # data
+            float(linha[13].replace('"', "")),  # valor
         )
 
         # adiciona na arvore binaria
         arvore_despesas.add(despesa)
         # adicionada no objeto "GestorDespesas"
-        gd.adicionar_despesa(despesa)
-        gc.add(categoria)
 
         # mostra na tela o progresso a cada 1000 registros lidos
         if processed % 1000 == 0:
@@ -86,14 +92,23 @@ print("Len (arvore):", len(arvore_despesas))
 print("Len (gd):", len(gd))
 print("Len (gc):", len(gc))
 
-for codigo, os in organizacao_social.items():
-    print(codigo, os)
+for cod, cat in gc.categorias.items():
+    print(cod, cat)
+
+
+cod_cat = input("\n")
+total = gc.get_total_cat(cod_cat)
+
+tot = 0
+for k, v in total.items():
+    tot += v
+    print(f"{k}: R${show_value_with_locale(v)}")
+print(f"Total: R${show_value_with_locale(tot)}")
+
+# for codigo, os in organizacao_social.items():
+#     print(codigo, os)
 # for despesa in repositorio_despesas:
 #     print(despesa)
-
-print(gc.anos)
-ano = int(input(": "))
-gc.pesquisar_ano(ano)
 
 # key = Despesa(1681572,'','')
 # print('busca:', repositorio_despesas.search(key))
