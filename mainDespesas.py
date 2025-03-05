@@ -4,7 +4,6 @@ import logging
 from datetime import datetime
 
 from AVLTree import AVLTree
-from categorias_despesas.categorias import CategoriasDespesas
 from categorias_despesas.gestor import GestorCategoriasDespesas
 from despesa import Despesa
 from gestor_despesas import GestorDespesas
@@ -104,11 +103,3 @@ for k, v in total.items():
     tot += v
     print(f"{k}: R${show_value_with_locale(v)}")
 print(f"Total: R${show_value_with_locale(tot)}")
-
-# for codigo, os in organizacao_social.items():
-#     print(codigo, os)
-# for despesa in repositorio_despesas:
-#     print(despesa)
-
-# key = Despesa(1681572,'','')
-# print('busca:', repositorio_despesas.search(key))
