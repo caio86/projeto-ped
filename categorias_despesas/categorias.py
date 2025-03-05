@@ -9,7 +9,7 @@ class CategoriasDespesas:
     ) -> None:
         self._codigo_categoria = cod_categoria
         self._categoria = categoria
-        self._ocorrencias = {}
+        self._ocorrencias: dict[int, float] = {}
 
     def new_record(self, data_lancamento: datetime, valor: float):
         ano = data_lancamento.year

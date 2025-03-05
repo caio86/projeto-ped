@@ -28,6 +28,12 @@ class GestorCategoriasDespesas:
             valor,
         )
 
+    def get_cat_ocurrencies(self, cod: str):
+        years: list[int] = []
+        for year in self.__categorias[cod]._ocorrencias:
+            years.append(year)
+        return (self.__categorias[cod]._ocorrencias, years)
+
     def get_total_cat(self, cod: str):
         return self.__categorias[cod]._ocorrencias
 

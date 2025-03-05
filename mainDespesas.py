@@ -95,11 +95,11 @@ for cod, cat in gc.categorias.items():
     print(cod, cat)
 
 
-cod_cat = input("\n")
-total = gc.get_total_cat(cod_cat)
+cod_cat = input("\n:")
+total, years = gc.get_cat_ocurrencies(cod_cat)
 
 tot = 0
-for k, v in total.items():
-    tot += v
-    print(f"{k}: R${show_value_with_locale(v)}")
+for year in years:
+    tot += total[year]
+    print(f"{year}: R${show_value_with_locale(total[year])}")
 print(f"Total: R${show_value_with_locale(tot)}")
