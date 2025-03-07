@@ -1,7 +1,16 @@
+"""Módulo para representação de categorias de despesas e gestão de registros financeiros."""
+
 from datetime import datetime
 
 
 class CategoriasDespesas:
+    """Representa uma categoria de despesas com histórico de valores acumulados por ano.
+
+    Attributes:
+        codigo_categoria: Código único identificador da categoria
+        categoria: Nome descritivo da categoria
+    """
+
     def __init__(
         self,
         cod_categoria: str,
@@ -11,7 +20,13 @@ class CategoriasDespesas:
         self._categoria = categoria
         self._ocorrencias: dict[int, float] = {}
 
-    def new_record(self, data_lancamento: datetime, valor: float):
+    def new_record(self, data_lancamento: datetime, valor: float) -> None:
+        """Adiciona um novo valor à categoria no ano especificado.
+
+        Args:
+            data_lancamento: Data do registro financeiro
+            valor: Valor monetário a ser adicionado
+        """
         ano = data_lancamento.year
         if ano not in self._ocorrencias:
             self._ocorrencias[ano] = valor
@@ -20,10 +35,14 @@ class CategoriasDespesas:
 
     @property
     def codigo_categoria(self) -> str:
+        """Código único identificador da categoria."""
+
         return self._codigo_categoria
 
     @property
     def categoria(self) -> str:
+        """Nome descritivo da categoria."""
+
         return self._categoria
 
     def __str__(self):
