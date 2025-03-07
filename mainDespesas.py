@@ -91,7 +91,7 @@ print("Len (arvore):", len(arvore_despesas))
 print("Len (gd):", len(gd))
 print("Len (gc):", len(gc))
 
-for cod, cat in gc.categorias.items():
+for cod, cat in gc.categorias:
     print(cod, cat)
 
 

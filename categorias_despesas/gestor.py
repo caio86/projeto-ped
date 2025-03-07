@@ -7,10 +7,16 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 class GestorCategoriasDespesas:
-    categorias = {}
-
     def __init__(self) -> None:
         self.__categorias: dict[str, CategoriasDespesas] = {}
+
+    @property
+    def categorias(self):
+        lista = []
+        for k, v in self.__categorias.items():
+            lista.append((k, v.categoria))
+
+        return lista
 
     def add(
         self,
@@ -21,7 +27,6 @@ class GestorCategoriasDespesas:
     ):
         if cod_cat not in self.__categorias:
             self.__categorias[cod_cat] = CategoriasDespesas(cod_cat, cat)
-            self.categorias[cod_cat] = cat
 
         self.__categorias[cod_cat].new_record(
             date,
