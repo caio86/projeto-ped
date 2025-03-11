@@ -1,11 +1,8 @@
 """Módulo para gestão de categorias de despesas e análise de registros financeiros."""
 
-import locale
 from datetime import datetime
 
 from categorias_despesas.categorias import CategoriasDespesas
-
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 class GestorCategoriasDespesas:
