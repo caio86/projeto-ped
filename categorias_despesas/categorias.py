@@ -20,7 +20,7 @@ class CategoriasDespesas:
         self._categoria = categoria
         self._ocorrencias: dict[int, float] = {}
 
-    def new_record(self, data_lancamento: datetime, valor: float) -> None:
+    def add_receita(self, data_lancamento: datetime, valor: float) -> None:
         """Adiciona um novo valor à categoria no ano especificado.
 
         Args:

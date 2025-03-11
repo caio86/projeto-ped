@@ -50,7 +50,7 @@ class GestorCategoriasDespesas:
         if cod_cat not in self.__categorias:
             self.__categorias[cod_cat] = CategoriasDespesas(cod_cat, cat)
 
-        self.__categorias[cod_cat].new_record(
+        self.__categorias[cod_cat].add_receita(
             date,
             valor,
         )
