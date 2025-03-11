@@ -9,6 +9,7 @@ class CategoriasDespesas:
     Attributes:
         codigo_categoria: Código único identificador da categoria
         categoria: Nome descritivo da categoria
+        ocorrencias: Dicionário dos anos em que a categoria aparece com o valor gasto no ano
     """
 
     def __init__(
@@ -44,6 +45,10 @@ class CategoriasDespesas:
         """Nome descritivo da categoria."""
 
         return self._categoria
+
+    @property
+    def ocorrencias(self) -> dict[int, float]:
+        return self._ocorrencias.copy()
 
     def __str__(self):
         return f"{self._categoria}: {self._ocorrencias}"
