@@ -55,25 +55,39 @@ class GestorCategoriasDespesas:
             valor,
         )
 
-    def get_cat_ocurrencies(self, cod: str) -> tuple[dict[int, float], list[int]]:
-        """Obtém o histórico completo de ocorrências e anos registrados para uma categoria.
+    def busca_categoria(self, cod: str) -> CategoriasDespesas:
+        """Retorna o objeto CodigoCategoria especificado como argumento.
 
         Args:
             cod: Código da categoria a consultar
 
         Returns:
-            tuple[dict[int, float], list[int]]: Tupla contendo:
-                - Dicionário com valores por ano
-                - Lista ordenada de anos com registros
+            Objeto CategoriaDespesa associado à chave, ou None caso o
+            o código não exista
+
+        Raises:
+            KeyError: Se o código não existir
         """
+        return self.__categorias[cod]
 
-        years: list[int] = []
-        for year in self.__categorias[cod]._ocorrencias:
-            years.append(year)
-        return (self.__categorias[cod]._ocorrencias, years)
 
-    def get_total_cat(self, cod: str):
-        """Retorna todo o histórico de valores acumulados por ano de uma categoria.
+    def receitas(self, cod: str) -> dict[int, float]:
+        """Obtém o histórico completo de ocorrências de anos e totais registrados
+           para a categoria especificada.
+
+        Args:
+            cod (str): Código da categoria a consultar
+
+        Returns:
+            dict[int, float]
+                - Dicionário com a chave correspondente ao ano
+                - Os valores correspondentes ao total por ano
+        """
+        return self.__categorias[cod]._ocorrencias.copy()
+
+
+    def total_receitas(self, cod: str)->float:
+        """Retorna o total de de valores acumulados em todos os anos de uma categoria.
 
         Args:
             cod: Código da categoria a consultar
@@ -81,10 +95,9 @@ class GestorCategoriasDespesas:
         Returns:
             Dicionário no formato {ano: valor_total}
         """
+        return sum(self.__categorias[cod]._ocorrencias.values())
 
-        return self.__categorias[cod]._ocorrencias
-
-    def get_year_cat(self, cod: str, year: int):
+    def receitas_em_um_ano(self, cod: str, year: int) -> float:
         """Obtém o total acumulado em uma categoria específica durante um ano.
 
         Args:
@@ -93,8 +106,10 @@ class GestorCategoriasDespesas:
 
         Returns:
             Valor total acumulado no ano especificado
-        """
 
+        Errors:
+            KeyError: Se o ano especificado não existir na categoria
+        """
         return self.__categorias[cod]._ocorrencias[year]
 
     def __len__(self):
