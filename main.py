@@ -13,7 +13,7 @@ import csv
 from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
-from projeto_ped.utils import DatasetInfo, Logger
+from projeto_ped.utils import DatasetInfo, Logger, Stats
 
 # Abertura do arquiuvo CSV
 ficheiro = open("pagamentos_gestao_pactuada_2019_2024.csv", "r", encoding="latin-1")
@@ -28,6 +28,7 @@ datasetinfo = DatasetInfo()
 # Instanciando estruturas de dados
 gestor_despesas = GestorDespesas()
 organizacao_social = {}
+stats = Stats()
 
 for linha in reader:
     try:
@@ -60,6 +61,11 @@ for linha in reader:
 
         # Montando uma hash table com o codigo e nome da organizacao social
         organizacao_social[int(linha[2].replace('"', ""))] = linha[3].replace('"', "")
+
+        stats.acumular(
+            despesa.valor,
+            despesa.data_lancamento,
+        )
 
     except Exception as _:
         """
