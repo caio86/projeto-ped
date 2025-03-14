@@ -13,6 +13,7 @@ import csv
 from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
+from projeto_ped.gestores.credor import Credor, GestaoCredor, desmascarar_cpf
 from projeto_ped.utils import DatasetInfo, Logger, Stats
 
 # Abertura do arquiuvo CSV
@@ -27,6 +28,7 @@ datasetinfo = DatasetInfo()
 
 # Instanciando estruturas de dados
 gestor_despesas = GestorDespesas()
+gestor_credor = GestaoCredor()
 organizacao_social = {}
 stats = Stats()
 
@@ -55,6 +57,15 @@ for linha in reader:
 
         # Adiciona na árvore binária
         gestor_despesas.adicionar_despesa(despesa)
+
+        gestor_credor.adicionar_credor(
+            Credor(
+                desmascarar_cpf(despesa.cpf_cpnj_credor),
+                str(linha[12].replace('"', "")),  # Coluna 13, NOME_CREDOR
+            ),
+            despesa.data_lancamento.strftime("%Y-%m-%d"),
+            despesa.valor,
+        )
 
         # Exibe na tela o progresso a cada 1000 registros lidos
         datasetinfo.show_progress()
