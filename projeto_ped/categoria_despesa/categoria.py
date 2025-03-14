@@ -3,7 +3,7 @@
 from datetime import datetime
 
 
-class CategoriasDespesas:
+class CategoriaDespesa:
     """Representa uma categoria de despesas com histórico de valores acumulados por ano.
 
     Attributes:

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from categorias_despesas.categorias import CategoriasDespesas
+from .categoria import CategoriaDespesa
 
 
 class GestorCategoriasDespesas:
@@ -13,7 +13,7 @@ class GestorCategoriasDespesas:
     """
 
     def __init__(self) -> None:
-        self.__categorias: dict[str, CategoriasDespesas] = {}
+        self.__categorias: dict[str, CategoriaDespesa] = {}
 
     @property
     def categorias(self) -> list[tuple[str, str]]:
@@ -48,14 +48,14 @@ class GestorCategoriasDespesas:
         """
 
         if cod_cat not in self.__categorias:
-            self.__categorias[cod_cat] = CategoriasDespesas(cod_cat, cat)
+            self.__categorias[cod_cat] = CategoriaDespesa(cod_cat, cat)
 
         self.__categorias[cod_cat].add_receita(
             date,
             valor,
         )
 
-    def busca_categoria(self, cod: str) -> CategoriasDespesas:
+    def busca_categoria(self, cod: str) -> CategoriaDespesa:
         """Retorna o objeto CodigoCategoria especificado como argumento.
 
         Args:
@@ -69,7 +69,6 @@ class GestorCategoriasDespesas:
             KeyError: Se o código não existir
         """
         return self.__categorias[cod]
-
 
     def receitas(self, cod: str) -> dict[int, float]:
         """Obtém o histórico completo de ocorrências de anos e totais registrados
@@ -85,8 +84,7 @@ class GestorCategoriasDespesas:
         """
         return self.__categorias[cod]._ocorrencias.copy()
 
-
-    def total_receitas(self, cod: str)->float:
+    def total_receitas(self, cod: str) -> float:
         """Retorna o total de de valores acumulados em todos os anos de uma categoria.
 
         Args:
