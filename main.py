@@ -15,6 +15,7 @@ from datetime import datetime
 from projeto_ped.despesa import Despesa, GestorDespesas
 from projeto_ped.gestores.categoria_despesa import GestorCategoriasDespesas
 from projeto_ped.gestores.credor import Credor, GestaoCredor, desmascarar_cpf
+from projeto_ped.gestores.organizacao_social import GestorOrgs, OrganizacaoSocial
 from projeto_ped.utils import DatasetInfo, Logger, Stats
 
 # Abertura do arquiuvo CSV
@@ -31,6 +32,8 @@ datasetinfo = DatasetInfo()
 gestor_despesas = GestorDespesas()
 gestor_credor = GestaoCredor()
 gestor_categoria = GestorCategoriasDespesas()
+gestor_organizacao_social = GestorOrgs()
+
 organizacao_social = {}
 stats = Stats()
 
@@ -72,6 +75,15 @@ for linha in reader:
         gestor_categoria.add(
             despesa.codigo_categoria_despesa,
             str(linha[12].replace('"', "")),  # Coluna 11, NOME_CATEGORIA
+            despesa.data_lancamento,
+            despesa.valor,
+        )
+
+        gestor_organizacao_social.adicionar_org(
+            OrganizacaoSocial(
+                despesa.codigo_organizacao_social,
+                str(linha[3].replace('"', "")),  # Coluna 11, NOME_ORGANIZACAO_SOCIAL
+            ),
             despesa.data_lancamento,
             despesa.valor,
         )
