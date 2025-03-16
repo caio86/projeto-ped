@@ -65,7 +65,7 @@ class GestaoCredor:
             Lista que possui as receitas anuais dos credores.
 
         """
-        self.credores = {}  # chave: identificador, valor: Credor
+        self.credores: dict[str, Credor] = {}  # chave: identificador, valor: Credor
 
     def adicionar_credor(
         self, credor: Credor, data_lancamento: str, valor_lancamento: float
@@ -288,4 +288,3 @@ class GestaoCredor:
         KeyError: Se o identificador não existir
         """
         return self.credores[identificador].receitas.copy()
-

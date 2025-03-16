@@ -36,7 +36,9 @@ class Credor:
         if type(identificador) is str and type(nome_credor) is str:
             self.identificador = identificador
             self.nome_credor = nome_credor
-            self.receitas = {}  # Dicionário de Receitas. Chave: ano, Valor: float
+            self.receitas: dict[int, float] = (
+                {}
+            )  # Dicionário de Receitas. Chave: ano, Valor: float
 
         else:
             raise TypeError("Objeto Credor declarado com parâmetro do tipo errado.")
