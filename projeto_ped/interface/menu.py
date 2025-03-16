@@ -81,11 +81,11 @@ class Menu:
             print("\nCredor não existe!")
             return
 
-        print(f"Credor: {credor.nome_credor}")
+        print(f"\nCredor: {credor.nome_credor}")
         print(f"{'Ano':<18} {'Total':<15}")
         print("=" * 18, "=" * 15)
         for ano, valor in credor.receitas.items():
-            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>12}")
 
     def _handle_query_categorias(self):
         cod_cat = input("Digite o código da categoria: ").strip()
@@ -95,11 +95,11 @@ class Menu:
             print("\nCategoria não existe!")
             return
 
-        print(f"Categoria: {categoria.categoria}")
+        print(f"\nCategoria: {categoria.categoria}")
         print(f"{'Ano':<18} {'Total':<15}")
         print("=" * 18, "=" * 15)
         for ano, valor in categoria.ocorrencias.items():
-            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>12}")
 
     def _handle_query_organizacao(self):
         cod_org = int(input("Digite o código da organização: ").strip())
@@ -111,11 +111,11 @@ class Menu:
             print("\nOrganização não existe!")
             return
 
-        print(f"Organizacao: {nome}")
+        print(f"\nOrganizacao: {nome}")
         print(f"{'Ano':<18} {'Total':<15}")
         print("=" * 18, "=" * 15)
         for ano, valor in receitas.items():
-            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>12}")
 
     def _handle_query_gasto_ano(self):
         ano = int(input("Digite o ano: ").strip())
@@ -126,11 +126,11 @@ class Menu:
             print(f"\nAno: {ano}, não possui gastos.")
             return
 
-        print(f"{'Mês/Ano':<18} {'Total':<15}")
+        print(f"\n{'Mês/Ano':<18} {'Total':<15}")
         print("=" * 18, "=" * 15)
         for mes, valor in gasto_ano:
             mes_ano = mes + "/" + str(ano)
-            print(f"{mes_ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+            print(f"{mes_ano:<18} R$ {self._show_value_with_locale(valor):>12}")
 
     def _handle_query_despesa(self):
         cod_despesa = int(input("Digite o codigo do lançamento: ").strip())
@@ -156,7 +156,7 @@ class Menu:
 
         nome_credor = credor.nome_credor
 
-        print(f"Credor: [{res.codigo_organizacao_social}] {nome_os}")
+        print(f"\nCredor: [{res.codigo_organizacao_social}] {nome_os}")
         print(f"Data de lançamento: {res.data_lancamento.date()}")
         print(
             f"Categoria da Despesa: [{res.codigo_categoria_despesa}] {nome_categoria}"
@@ -194,7 +194,7 @@ class Menu:
             print(f"\nNenhum dado encontrado para o ano {ano}!")
             return
 
-        print(f"{chave:<18} {'Total':<15}")
+        print(f"\n{chave:<18} {'Total':<15}")
         print("=" * 18, "=" * 15)
         for chave, valor in topn[ano][chave]:
             print(f"{chave:<18} R$ {self._show_value_with_locale(valor):>12}")
