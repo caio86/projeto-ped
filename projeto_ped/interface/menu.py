@@ -57,7 +57,7 @@ class Menu:
             case "o":
                 self._handle_query_organizacao()
             case "g":
-                pass
+                self._handle_query_gasto_ano()
             case "d":
                 pass
             case "l":
@@ -115,6 +115,21 @@ class Menu:
         print("=" * 18, "=" * 15)
         for ano, valor in receitas.items():
             print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+
+    def _handle_query_gasto_ano(self):
+        ano = int(input("Digite o ano: ").strip())
+
+        try:
+            gasto_ano = self.__stats.get_total_por_mes(ano)
+        except AssertionError:
+            print(f"\nAno: {ano}, não possui gastos.")
+            return
+
+        print(f"{'Mês/Ano':<18} {'Total':<15}")
+        print("=" * 18, "=" * 15)
+        for mes, valor in gasto_ano:
+            mes_ano = mes + "/" + str(ano)
+            print(f"{mes_ano:<18} R$ {self._show_value_with_locale(valor):>5}")
 
     def run(self):
         while self._running:

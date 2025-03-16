@@ -313,4 +313,3 @@ class Stats:
             f"Total Geral : {locale.currency(self.__total, grouping=True, symbol=True)}"
         )
         return r
-
