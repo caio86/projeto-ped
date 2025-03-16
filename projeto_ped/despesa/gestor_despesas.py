@@ -1,4 +1,5 @@
 from .despesa import Despesa
+from .ListaEncadeadaOrdenada import Lista, ListaError
 
 
 class GestorDespesas:
@@ -15,7 +16,7 @@ class GestorDespesas:
 
         Cria uma lista vazia para armazenar objetos do tipo Despesa.
         """
-        self.despesas = []
+        self.despesas = Lista()
 
     def adicionar_despesa(self, despesa: Despesa):
         """
@@ -24,7 +25,7 @@ class GestorDespesas:
         Args:
             despesa (Despesa): Objeto do tipo Despesa a ser adicionado à lista.
         """
-        self.despesas.append(despesa)
+        self.despesas.inserir(despesa)
 
     def busca(self, despesa: Despesa):
         """
