@@ -3,7 +3,7 @@ from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
 from projeto_ped.gestores import GestaoCredor, GestorCategoriasDespesas, GestorOrgs
-from projeto_ped.utils import DatasetInfo, Stats
+from projeto_ped.utils import DatasetInfo, Stats, topn_cnpj, topn_cpf
 
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
@@ -64,7 +64,7 @@ class Menu:
             case "l":
                 pass
             case "t":
-                pass
+                self._handle_topn()
             case "e":
                 pass
             case "s":
@@ -163,6 +163,41 @@ class Menu:
         )
         print(f"Credor: [{res.cpf_cpnj_credor}] {nome_credor}")
         print(f"Valor: R$ {self._show_value_with_locale(res.valor)}")
+
+    def _handle_topn(self):
+        tipo_credor = input("Digite o tipo do credor [CPF,CNPJ]: ").strip().upper()
+
+        if tipo_credor not in ["CPF", "CNPJ"]:
+            print("\nTipo de credor inválido!")
+            return
+
+        n = int(input("Digite quantos credores serção mostrados: ").strip())
+
+        ano = int(input("Digite o ano: ").strip())
+
+        credores_dict = {}
+
+        for cod, credor in self.__gestor_credor.credores.items():
+            for ano, valor in credor.receitas.items():
+                if ano not in credores_dict:
+                    credores_dict[ano] = {}
+                credores_dict[ano][cod] = valor
+
+        if tipo_credor == "CPF":
+            topn = topn_cpf(credores_dict, n, ano)  # type: ignore
+            chave = "CPFs"
+        else:
+            topn = topn_cnpj(credores_dict, n, ano)  # type: ignore
+            chave = "CNPJs"
+
+        if ano not in topn or chave not in topn[ano]:
+            print(f"\nNenhum dado encontrado para o ano {ano}!")
+            return
+
+        print(f"{chave:<18} {'Total':<15}")
+        print("=" * 18, "=" * 15)
+        for chave, valor in topn[ano][chave]:
+            print(f"{chave:<18} R$ {self._show_value_with_locale(valor):>12}")
 
     def run(self):
         while self._running:
