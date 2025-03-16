@@ -78,7 +78,7 @@ for linha in reader:
 
         gestor_categoria.add(
             despesa.codigo_categoria_despesa,
-            str(linha[12].replace('"', "")),  # Coluna 11, NOME_CATEGORIA
+            str(linha[10].replace('"', "")),  # Coluna 11, NOME_CATEGORIA
             despesa.data_lancamento,
             despesa.valor,
         )
