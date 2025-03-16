@@ -27,7 +27,7 @@ class GestorDespesas:
         """
         self.despesas.inserir(despesa)
 
-    def busca(self, despesa: Despesa):
+    def busca(self, despesa: Despesa) -> Despesa | None:
         """
         Busca uma despesa na lista com base em um objeto de referência.
 

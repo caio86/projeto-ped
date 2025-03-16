@@ -1,6 +1,7 @@
 import locale
+from datetime import datetime
 
-from projeto_ped.despesa import GestorDespesas
+from projeto_ped.despesa import Despesa, GestorDespesas
 from projeto_ped.gestores import GestaoCredor, GestorCategoriasDespesas, GestorOrgs
 from projeto_ped.utils import DatasetInfo, Stats
 
@@ -34,7 +35,7 @@ class Menu:
         print("(p) Pesquisar Categoria da Despesa")
         print("(o) Pesquisar Organização Social")
         print("(g) Consultar gasto por ano de lançamento")
-        print("(p) Consultar despesa")
+        print("(d) Consultar despesa")
         print("(l) Listar")
         print("\tOrganização Social")
         print("\tCredores")
@@ -59,7 +60,7 @@ class Menu:
             case "g":
                 self._handle_query_gasto_ano()
             case "d":
-                pass
+                self._handle_query_despesa()
             case "l":
                 pass
             case "t":
@@ -130,6 +131,38 @@ class Menu:
         for mes, valor in gasto_ano:
             mes_ano = mes + "/" + str(ano)
             print(f"{mes_ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+
+    def _handle_query_despesa(self):
+        cod_despesa = int(input("Digite o codigo do lançamento: ").strip())
+        res = self.__gestor_despesas.busca(
+            Despesa("", 0, cod_despesa, datetime(1999, 1, 1), "", "", 0, "")
+        )
+
+        if res is None:
+            print("\nDespesa não existe!")
+            return
+
+        nome_os = self.__gestor_organizacao_social.get_nome_organizacao(
+            res.codigo_organizacao_social
+        )
+        nome_categoria = self.__gestor_categoria.busca_categoria(
+            res.codigo_categoria_despesa
+        ).categoria
+
+        credor = self.__gestor_credor.buscar_credor(res.cpf_cpnj_credor)
+
+        if credor is None:
+            return
+
+        nome_credor = credor.nome_credor
+
+        print(f"Credor: [{res.codigo_organizacao_social}] {nome_os}")
+        print(f"Data de lançamento: {res.data_lancamento.date()}")
+        print(
+            f"Categoria da Despesa: [{res.codigo_categoria_despesa}] {nome_categoria}"
+        )
+        print(f"Credor: [{res.cpf_cpnj_credor}] {nome_credor}")
+        print(f"Valor: R$ {self._show_value_with_locale(res.valor)}")
 
     def run(self):
         while self._running:
