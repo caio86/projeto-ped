@@ -50,11 +50,71 @@ class Menu:
         user_input = user_input.lower()
 
         match user_input:
+            case "c":
+                self._handle_query_credor()
+            case "p":
+                self._handle_query_categorias()
+            case "o":
+                self._handle_query_organizacao()
+            case "g":
+                pass
+            case "d":
+                pass
+            case "l":
+                pass
+            case "t":
+                pass
+            case "e":
+                pass
             case "s":
                 self._running = False
                 print("\nSaindo...")
             case _:
                 print("\nOpção Inválida! Por favor tente novamente.")
+
+    def _handle_query_credor(self):
+        cpf_cnpj = input("Digite o CPF/CNPJ do credor: ").strip()
+        credor = self.__gestor_credor.buscar_credor(cpf_cnpj)
+
+        if credor is None:
+            print("\nCredor não existe!")
+            return
+
+        print(f"Credor: {credor.nome_credor}")
+        print(f"{'Ano':<18} {'Total':<15}")
+        print("=" * 18, "=" * 15)
+        for ano, valor in credor.receitas.items():
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+
+    def _handle_query_categorias(self):
+        cod_cat = input("Digite o código da categoria: ").strip()
+        try:
+            categoria = self.__gestor_categoria.busca_categoria(cod_cat)
+        except KeyError:
+            print("\nCategoria não existe!")
+            return
+
+        print(f"Categoria: {categoria.categoria}")
+        print(f"{'Ano':<18} {'Total':<15}")
+        print("=" * 18, "=" * 15)
+        for ano, valor in categoria.ocorrencias.items():
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
+
+    def _handle_query_organizacao(self):
+        cod_org = int(input("Digite o código da organização: ").strip())
+
+        try:
+            nome = self.__gestor_organizacao_social.get_nome_organizacao(cod_org)
+            receitas = self.__gestor_organizacao_social.get_receitas(cod_org)
+        except KeyError:
+            print("\nOrganização não existe!")
+            return
+
+        print(f"Organizacao: {nome}")
+        print(f"{'Ano':<18} {'Total':<15}")
+        print("=" * 18, "=" * 15)
+        for ano, valor in receitas.items():
+            print(f"{ano:<18} R$ {self._show_value_with_locale(valor):>5}")
 
     def run(self):
         while self._running:
