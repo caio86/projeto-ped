@@ -13,9 +13,14 @@ import csv
 from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
-from projeto_ped.gestores.categoria_despesa import GestorCategoriasDespesas
-from projeto_ped.gestores.credor import Credor, GestaoCredor, desmascarar_cpf
-from projeto_ped.gestores.organizacao_social import GestorOrgs, OrganizacaoSocial
+from projeto_ped.gestores import (
+    Credor,
+    GestaoCredor,
+    GestorCategoriasDespesas,
+    GestorOrgs,
+    OrganizacaoSocial,
+    desmascarar_cpf,
+)
 from projeto_ped.utils import DatasetInfo, Logger, Stats
 
 # Abertura do arquiuvo CSV
