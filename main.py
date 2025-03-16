@@ -34,7 +34,6 @@ gestor_credor = GestaoCredor()
 gestor_categoria = GestorCategoriasDespesas()
 gestor_organizacao_social = GestorOrgs()
 
-organizacao_social = {}
 stats = Stats()
 
 for linha in reader:
@@ -91,8 +90,6 @@ for linha in reader:
         # Exibe na tela o progresso a cada 1000 registros lidos
         datasetinfo.show_progress()
 
-        # Montando uma hash table com o codigo e nome da organizacao social
-        organizacao_social[int(linha[2].replace('"', ""))] = linha[3].replace('"', "")
 
         stats.acumular(
             despesa.valor,
