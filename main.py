@@ -21,6 +21,7 @@ from projeto_ped.gestores import (
     OrganizacaoSocial,
     desmascarar_cpf,
 )
+from projeto_ped.interface.menu import Menu
 from projeto_ped.utils import DatasetInfo, Logger, Stats
 
 # Abertura do arquiuvo CSV
@@ -40,6 +41,15 @@ gestor_categoria = GestorCategoriasDespesas()
 gestor_organizacao_social = GestorOrgs()
 
 stats = Stats()
+
+menu = Menu(
+    datasetinfo,
+    gestor_despesas,
+    gestor_credor,
+    gestor_categoria,
+    gestor_organizacao_social,
+    stats,
+)
 
 for linha in reader:
     try:
@@ -95,7 +105,6 @@ for linha in reader:
         # Exibe na tela o progresso a cada 1000 registros lidos
         datasetinfo.show_progress()
 
-
         stats.acumular(
             despesa.valor,
             despesa.data_lancamento,
@@ -112,8 +121,4 @@ for linha in reader:
         # print(linha)
         # break
 
-# Exibindo resultado final do processamento das linhas
-print("=== Estatísticas de Processamento ===")
-print("Total de processado:", datasetinfo.processed)
-print("Total de carregados:", datasetinfo.loaded)
-print("Total de descartados:", datasetinfo.disregard)
+menu.run()
