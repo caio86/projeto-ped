@@ -62,7 +62,7 @@ class Menu:
             case "d":
                 self._handle_query_despesa()
             case "l":
-                pass
+                self._handle_listar()
             case "t":
                 self._handle_topn()
             case "e":
@@ -163,6 +163,82 @@ class Menu:
         )
         print(f"Credor: [{res.cpf_cpnj_credor}] {nome_credor}")
         print(f"Valor: R$ {self._show_value_with_locale(res.valor)}")
+
+    def _handle_listar(self):
+        print("(c) Credor")
+        print("(p) Categoria")
+        print("(o) Organização Social")
+        escolha = input("Escolha o tipo: ").strip().lower()
+
+        if escolha not in "cop":
+            print("\nTipo inválido!")
+            return
+
+        match escolha:
+            case "c":
+                self._listar_credor()
+            case "p":
+                self._listar_categoria()
+            case "o":
+                self._listar_organizacao()
+
+    def _listar_credor(self):
+        credores = [x for x in self.__gestor_credor.credores.values()][:5]
+
+        print(f"{'Credor':<18} {'Total':<16}")
+        print("=" * 18, "=" * 16)
+        for credor in credores:
+            if credor is None:
+                print("\nCredor não existe!")
+                return
+
+            total = sum(credor.receitas.values())
+            print(
+                f"{credor.identificador:<18} R$ {self._show_value_with_locale(total):>13}"
+            )
+
+    def _listar_categoria(self):
+        categorias = [x for x in self.__gestor_categoria.categorias][:5]
+
+        lc = 9
+        mc = max(len(s[1]) for s in categorias)
+        rc = 16
+
+        print(f"{'Categoria':<{lc}} {'Nome':<{mc}} {'Total':<{rc}}")
+        print("=" * lc, "=" * mc, "=" * rc)
+        for cod_cat, cat in categorias:
+            try:
+                total = self.__gestor_categoria.total_receitas(cod_cat)
+            except KeyError:
+                print("\nCategoria não existe!")
+                return
+
+            print(
+                f"{cod_cat:^{lc}} {cat:<{mc}} R$ {self._show_value_with_locale(total):>{rc-3}}"
+            )
+
+    def _listar_organizacao(self):
+        organizacoes = [
+            x for x in self.__gestor_organizacao_social.get_organizacoes().items()
+        ][:5]
+
+        lc = 11
+        mc = max(len(s[1]) for s in organizacoes)
+        rc = 16
+
+        print(f"{'Organização':<{lc}} {'Nome':<{mc}} {'Total':<{rc}}")
+        print("=" * lc, "=" * mc, "=" * rc)
+        for cod_org, nome in organizacoes:
+            try:
+                receitas = self.__gestor_organizacao_social.get_receitas(cod_org)
+            except KeyError:
+                print("\nOrganização não existe!")
+                return
+
+            total = sum(receitas.values())
+            print(
+                f"{cod_org:^{lc}} {nome:<{mc}} R$ {self._show_value_with_locale(total):>{rc-3}}"
+            )
 
     def _handle_topn(self):
         tipo_credor = input("Digite o tipo do credor [CPF,CNPJ]: ").strip().upper()
