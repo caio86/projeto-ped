@@ -152,16 +152,17 @@ class Menu:
         credor = self.__gestor_credor.buscar_credor(res.cpf_cpnj_credor)
 
         if credor is None:
-            return
+            print("\nCredor não existe!")
 
-        nome_credor = credor.nome_credor
 
         print(f"\nCredor: [{res.codigo_organizacao_social}] {nome_os}")
         print(f"Data de lançamento: {res.data_lancamento.date()}")
         print(
             f"Categoria da Despesa: [{res.codigo_categoria_despesa}] {nome_categoria}"
         )
-        print(f"Credor: [{res.cpf_cpnj_credor}] {nome_credor}")
+        if credor is not None:
+            nome_credor = credor.nome_credor
+            print(f"Credor: [{res.cpf_cpnj_credor}] {nome_credor}")
         print(f"Valor: R$ {self._show_value_with_locale(res.valor)}")
 
     def _handle_listar(self):
