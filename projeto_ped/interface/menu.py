@@ -154,7 +154,6 @@ class Menu:
         if credor is None:
             print("\nCredor não existe!")
 
-
         print(f"\nCredor: [{res.codigo_organizacao_social}] {nome_os}")
         print(f"Data de lançamento: {res.data_lancamento.date()}")
         print(
@@ -255,10 +254,10 @@ class Menu:
         credores_dict = {}
 
         for cod, credor in self.__gestor_credor.credores.items():
-            for ano, valor in credor.receitas.items():
-                if ano not in credores_dict:
-                    credores_dict[ano] = {}
-                credores_dict[ano][cod] = valor
+            for ano_receita, valor in credor.receitas.items():
+                if ano_receita not in credores_dict:
+                    credores_dict[ano_receita] = {}
+                credores_dict[ano_receita][cod] = valor
 
         if tipo_credor == "CPF":
             topn = topn_cpf(credores_dict, n, ano)  # type: ignore
