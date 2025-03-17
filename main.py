@@ -12,6 +12,8 @@ para manter a estrutura correta do CSV.
 import csv
 from datetime import datetime
 
+from alive_progress import alive_bar
+
 from projeto_ped.despesa import Despesa, GestorDespesas
 from projeto_ped.gestores import (
     Credor,
@@ -29,6 +31,9 @@ ficheiro = open("pagamentos_gestao_pactuada_2019_2024.csv", "r", encoding="latin
 reader = csv.reader(
     ficheiro, delimiter=";"
 )  # Delimiter está substituindo o .split(";"), pois o split estava causando problemas.
+
+tam_ficheiro = sum(1 for linha in ficheiro if linha.strip()) - 1
+ficheiro.seek(0)
 
 # Criando logging e informações do dataset (linhas processadas, carregadas e descartas).
 logger = Logger()
@@ -51,74 +56,80 @@ menu = Menu(
     stats,
 )
 
-for linha in reader:
-    try:
+with alive_bar(tam_ficheiro, spinner="twirls") as bar:
+    for linha in reader:
+        try:
 
-        datasetinfo.update_processed()
-        if datasetinfo.processed == 1:  # Descartando o cabeçalho
-            datasetinfo.update_disregard()
-            continue
+            datasetinfo.update_processed()
+            if datasetinfo.processed == 1:  # Descartando o cabeçalho
+                datasetinfo.update_disregard()
+                bar(skipped=True)
+                continue
 
-        despesa = Despesa(
-            str(linha[1].replace('"', "")),  # Coluna 2, COMPETENCIA
-            int(linha[2].replace('"', "")),  # Coluna 3, CODIGO_ORGANIZACAO_SOCIAL
-            int(linha[4].replace('"', "")),  # Coluna 5, CODIGO_LANCAMENTO
-            datetime.strptime(
-                linha[5].replace('"', ""), "%Y-%m-%d"
-            ),  # Coluna 6, DATA_LANCAMENTO
-            str(linha[9].replace('"', "")),  # Coluna 10, CODIGO_CATEGORIA_DESPESA
-            str(linha[11].replace('"', "")),  # Coluna 12, CPFCNPJ_CREDOR
-            float(linha[13].replace('"', "")),  # Coluna 14, VALOR_LANCAMENTO
-            str(linha[14].replace('"', "")),  # Coluna 15, OBSERVACAO_LANCAMENTO
-        )
+            despesa = Despesa(
+                str(linha[1].replace('"', "")),  # Coluna 2, COMPETENCIA
+                int(linha[2].replace('"', "")),  # Coluna 3, CODIGO_ORGANIZACAO_SOCIAL
+                int(linha[4].replace('"', "")),  # Coluna 5, CODIGO_LANCAMENTO
+                datetime.strptime(
+                    linha[5].replace('"', ""), "%Y-%m-%d"
+                ),  # Coluna 6, DATA_LANCAMENTO
+                str(linha[9].replace('"', "")),  # Coluna 10, CODIGO_CATEGORIA_DESPESA
+                str(linha[11].replace('"', "")),  # Coluna 12, CPFCNPJ_CREDOR
+                float(linha[13].replace('"', "")),  # Coluna 14, VALOR_LANCAMENTO
+                str(linha[14].replace('"', "")),  # Coluna 15, OBSERVACAO_LANCAMENTO
+            )
 
-        datasetinfo.update_loaded()  # Se o objeto foi instanciado sem problemas, incrementa quantidade de linhas que foram carregadas com sucesso
+            datasetinfo.update_loaded()  # Se o objeto foi instanciado sem problemas, incrementa quantidade de linhas que foram carregadas com sucesso
 
-        # Adiciona na árvore binária
-        gestor_despesas.adicionar_despesa(despesa)
+            # Adiciona na árvore binária
+            gestor_despesas.adicionar_despesa(despesa)
 
-        gestor_credor.adicionar_credor(
-            Credor(
-                desmascarar_cpf(despesa.cpf_cpnj_credor),
-                str(linha[12].replace('"', "")),  # Coluna 13, NOME_CREDOR
-            ),
-            despesa.data_lancamento.strftime("%Y-%m-%d"),
-            despesa.valor,
-        )
+            gestor_credor.adicionar_credor(
+                Credor(
+                    desmascarar_cpf(despesa.cpf_cpnj_credor),
+                    str(linha[12].replace('"', "")),  # Coluna 13, NOME_CREDOR
+                ),
+                despesa.data_lancamento.strftime("%Y-%m-%d"),
+                despesa.valor,
+            )
 
-        gestor_categoria.add(
-            despesa.codigo_categoria_despesa,
-            str(linha[10].replace('"', "")),  # Coluna 11, NOME_CATEGORIA
-            despesa.data_lancamento,
-            despesa.valor,
-        )
+            gestor_categoria.add(
+                despesa.codigo_categoria_despesa,
+                str(linha[10].replace('"', "")),  # Coluna 11, NOME_CATEGORIA
+                despesa.data_lancamento,
+                despesa.valor,
+            )
 
-        gestor_organizacao_social.adicionar_org(
-            OrganizacaoSocial(
-                despesa.codigo_organizacao_social,
-                str(linha[3].replace('"', "")),  # Coluna 11, NOME_ORGANIZACAO_SOCIAL
-            ),
-            despesa.data_lancamento,
-            despesa.valor,
-        )
+            gestor_organizacao_social.adicionar_org(
+                OrganizacaoSocial(
+                    despesa.codigo_organizacao_social,
+                    str(
+                        linha[3].replace('"', "")
+                    ),  # Coluna 11, NOME_ORGANIZACAO_SOCIAL
+                ),
+                despesa.data_lancamento,
+                despesa.valor,
+            )
 
-        # Exibe na tela o progresso a cada 1000 registros lidos
-        datasetinfo.show_progress()
+            # Exibe na tela o progresso a cada 1000 registros lidos
+            # datasetinfo.show_progress()
 
-        stats.acumular(
-            despesa.valor,
-            despesa.data_lancamento,
-        )
+            stats.acumular(
+                despesa.valor,
+                despesa.data_lancamento,
+            )
 
-    except Exception as _:
-        """
-        Se entrar aqui, houve algum problema na instanciação de alguma linha do csv,
-        e então ela será descartada. O cabeçalho sempre é descartado."
-        """
-        logger.log_error(linha)
-        datasetinfo.update_disregard
-        # print('Erro:', e)
-        # print(linha)
-        # break
+        except Exception as _:
+            """
+            Se entrar aqui, houve algum problema na instanciação de alguma linha do csv,
+            e então ela será descartada. O cabeçalho sempre é descartado."
+            """
+            logger.log_error(linha)
+            datasetinfo.update_disregard
+            # print('Erro:', e)
+            # print(linha)
+            # break
+        finally:
+            bar()
 
 menu.run()
