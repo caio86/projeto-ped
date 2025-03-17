@@ -34,7 +34,7 @@ class Menu:
         os.system("cls" if os.name == "nt" else "clear")
 
     def _mostra_menu(self) -> None:
-        print("\n============= Menu Principal ==============")
+        print("============= Menu Principal ==============")
         print("(c) Pesquisar Credor")
         print("(p) Pesquisar Categoria da Despesa")
         print("(o) Pesquisar Organização Social")
