@@ -66,7 +66,7 @@ class Menu:
             case "t":
                 self._handle_topn()
             case "e":
-                pass
+                self._handle_estatisticas()
             case "s":
                 self._running = False
                 print("\nSaindo...")
@@ -274,6 +274,59 @@ class Menu:
         print("=" * 18, "=" * 15)
         for chave, valor in topn[ano][chave]:
             print(f"{chave:<18} R$ {self._show_value_with_locale(valor):>12}")
+
+    def _handle_estatisticas(self):
+        anos: list[tuple[int, float]] = self.__stats.get_total_por_ano()
+        total = self.__stats.total
+
+        maior_cpf = None
+        maior_cpf_valor = 0.0
+
+        maior_cnpj = None
+        maior_cnpj_valor = 0.0
+
+        for credor in self.__gestor_credor.credores.values():
+            valor = sum(credor.receitas.values())
+            if len(credor.identificador) == 14:
+                if valor > maior_cpf_valor:
+                    maior_cpf = credor
+                    maior_cpf_valor = valor
+            else:
+                if valor > maior_cnpj_valor:
+                    maior_cnpj = credor
+                    maior_cnpj_valor = valor
+
+        if maior_cpf is None:
+            print("\nNenhum CPF cadastrado\n")
+
+        if maior_cnpj is None:
+            print("\nNenhum CNPJ cadastrado\n")
+
+        print(
+            f"\nQuantidade de lançamentos de despesas processadas: {self.__datasetinfo.loaded}"
+        )
+
+        print("Despesas por ano encontrados:")
+        for ano, valor in anos:
+            porcentagem = (float(valor) / float(total)) * 100
+            print(
+                f"\t{ano}: R$ {self._show_value_with_locale(valor, 0):>11} ({porcentagem:.0f}%)"
+            )
+        print(
+            f"Acumulado ao longo dos anos: R$ {self._show_value_with_locale(total, 0)} (100%)"
+        )
+
+        if maior_cnpj is not None:
+            print("CNPJ que recebeu mais recursos:")
+            print(f"\t{maior_cnpj.identificador}")
+            print(f"\t{maior_cnpj.nome_credor}")
+            print(f"\tValor: R$ {self._show_value_with_locale(maior_cnpj_valor)}")
+
+        if maior_cpf is not None:
+            print("CPF que mais recebeu recursos")
+            print(f"\t{maior_cpf.identificador}")
+            print(f"\t{maior_cpf.nome_credor}")
+            print(f"\tValor: R$ {self._show_value_with_locale(maior_cpf_valor)}")
 
     def run(self):
         while self._running:
