@@ -56,7 +56,7 @@ menu = Menu(
     stats,
 )
 
-with alive_bar(tam_ficheiro, spinner="twirls") as bar:
+with alive_bar(tam_ficheiro, bar="filling", spinner="radioactive") as bar:
     for linha in reader:
         try:
 
