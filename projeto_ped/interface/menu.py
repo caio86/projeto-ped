@@ -3,7 +3,8 @@ import os
 from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
-from projeto_ped.gestores import GestaoCredor, GestorCategoriasDespesas, GestorOrgs
+from projeto_ped.gestores import (GestaoCredor, GestorCategoriasDespesas,
+                                  GestorOrgs, desmascarar_cpf)
 from projeto_ped.utils import DatasetInfo, Stats, topn_cnpj, topn_cpf
 
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
@@ -79,6 +80,8 @@ class Menu:
 
     def _handle_query_credor(self):
         cpf_cnpj = input("Digite o CPF/CNPJ do credor: ").strip()
+        if '*' in cpf_cnpj:
+            cpf_cnpj = desmascarar_cpf(cpf_cnpj)
         credor = self.__gestor_credor.buscar_credor(cpf_cnpj)
 
         if credor is None:
