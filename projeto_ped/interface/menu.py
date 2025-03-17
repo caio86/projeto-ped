@@ -26,8 +26,8 @@ class Menu:
         self.__gestor_organizacao_social = gestor_organizacao_social
         self.__stats = stats
 
-    def _show_value_with_locale(self, value: float) -> str:
-        return locale.format_string("%5.2f", value, True)
+    def _show_value_with_locale(self, value: float, decimals: int = 2) -> str:
+        return locale.format_string(f"%5.{decimals}f", value, True)
 
     def _mostra_menu(self) -> None:
         print("\n============= Menu Principal ==============")
