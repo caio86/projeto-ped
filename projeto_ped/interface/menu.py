@@ -251,7 +251,7 @@ class Menu:
             print("\nTipo de credor inválido!")
             return
 
-        n = int(input("Digite quantos credores serção mostrados: ").strip())
+        n = int(input("Digite quantos credores serão mostrados: ").strip())
 
         ano = int(input("Digite o ano: ").strip())
 
