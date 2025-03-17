@@ -1,4 +1,5 @@
 import locale
+import os
 from datetime import datetime
 
 from projeto_ped.despesa import Despesa, GestorDespesas
@@ -28,6 +29,9 @@ class Menu:
 
     def _show_value_with_locale(self, value: float, decimals: int = 2) -> str:
         return locale.format_string(f"%5.{decimals}f", value, True)
+
+    def _limpa_tela(self):
+        os.system("cls" if os.name == "nt" else "clear")
 
     def _mostra_menu(self) -> None:
         print("\n============= Menu Principal ==============")
@@ -336,3 +340,4 @@ class Menu:
 
             if self._running:
                 input("\nPressione Enter para continuar.")
+                self._limpa_tela()
